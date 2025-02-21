@@ -6,7 +6,6 @@ import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { IoIosArrowRoundBack } from "react-icons/io";
-import Loading from "@/app/loading";
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -69,7 +68,9 @@ export default function Register() {
     }
   }, [router]);
 
-  if (loading) return <Loading />;
+  if (loading) return <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
+  <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-600 border-solid"></div>
+</div>;
 
   return (
     <div className="flex min-h-[80vh] flex-col items-center justify-center">
