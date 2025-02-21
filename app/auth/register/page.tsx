@@ -14,7 +14,6 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const { login } = useAuth();
-  const [loading, setLoading] = useState(true);
 
   const router = useRouter();
 
@@ -63,14 +62,14 @@ export default function Register() {
       if (token) {
         router.push("/");
       } else {
-        setLoading(false);
+        console.log(false);
       }
     }
   }, [router]);
 
-  if (loading) return <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
-  <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-600 border-solid"></div>
-</div>;
+//   if (loading) return <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
+//   <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-600 border-solid"></div>
+// </div>;
 
   return (
     <div className="flex min-h-[80vh] flex-col items-center justify-center">
