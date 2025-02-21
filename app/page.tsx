@@ -58,14 +58,12 @@ const Home: React.FC = () => {
       )}
 
       {!user ? (
-        <p className="text-center text-red-500 font-semibold my-4">
+        <p className="text-center text-red-500 my-4">
           Login to access full features.
         </p>
       ) : (
         <ProtectedRoute roles={["user", "admin"]}>
-          <p className="text-center text-green-500 font-semibold">
-            Welcome, {user.name}!
-          </p>
+          <div></div>
         </ProtectedRoute>
       )}
 

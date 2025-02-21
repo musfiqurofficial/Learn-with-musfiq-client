@@ -23,13 +23,20 @@ interface Module {
 
 export default function LearnCourse() {
   const { Id } = useParams();
-  const { courses } = useCourses();
+  const { courses, fetchCourses, token } = useCourses();
   const [modules, setModules] = useState<Module[]>([]);
   const [activeModule, setActiveModule] = useState<string | null>(null);
   const [currentVideo, setCurrentVideo] = useState<string | null>(null);
   const [currentPdfUrls, setCurrentPdfUrls] = useState<string[]>([]);
+  const [watchedVideos, setWatchedVideos] = useState<string[]>([]);
 
   const course = courses.find((course) => course._id === Id);
+
+  useEffect(() => {
+    if (token) {
+      fetchCourses();
+    }
+  }, [token, fetchCourses]);
 
   useEffect(() => {
     const fetchModules = async () => {
@@ -56,9 +63,83 @@ export default function LearnCourse() {
     setActiveModule(activeModule === moduleId ? null : moduleId);
   };
 
-  const handleVideoChange = (videoUrl: string, pdfUrls: string[]) => {
+  const markVideoAsWatched = async (lectureId: string) => {
+    try {
+      console.log("Marking video as watched:", {
+        lectureId,
+        activeModule,
+        Id,
+        token,
+      });
+
+      const response = await fetch(
+        `/api/courses/${Id}/modules/${activeModule}/lectures/${lectureId}/watch`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        if (errorData.message === "Video already watched") {
+          console.log("Video already watched:", lectureId);
+          setWatchedVideos((prev) => [...prev, lectureId]);
+          return;
+        }
+        throw new Error(errorData.message || "Failed to mark video as watched");
+      }
+
+      const data = await response.json();
+      console.log("Video marked as watched:", data);
+      setWatchedVideos((prev) => [...prev, lectureId]);
+      toast.success(data.message);
+    } catch (error) {
+      console.error("Error marking video as watched:", error);
+      toast.error("Failed to mark video as watched");
+    }
+  };
+
+  const handleVideoChange = async (
+    lectureId: string,
+    videoUrl: string,
+    pdfUrls: string[]
+  ) => {
     setCurrentVideo(videoUrl);
     setCurrentPdfUrls(pdfUrls);
+
+    if (!activeModule) {
+      console.error("No active module selected");
+      toast.error("Please select a module first");
+      return;
+    }
+
+    if (!watchedVideos.includes(lectureId)) {
+      await markVideoAsWatched(lectureId);
+    }
+  };
+
+  const calculateProgress = () => {
+    if (!course || !modules.length) return 0;
+
+    const totalVideos = modules.flatMap((module) => module.lectures).length;
+
+    const watchedCount = modules
+      .flatMap((module) => module.lectures)
+      .filter((lecture) => watchedVideos.includes(lecture._id)).length;
+
+    return (watchedCount / totalVideos) * 100;
+  };
+
+  const isModuleCompleted = (moduleId: string) => {
+    const selectedModule = modules.find((m) => m._id === moduleId);
+    if (!selectedModule) return false;
+
+    return selectedModule.lectures.every((lecture) =>
+      watchedVideos.includes(lecture._id)
+    );
   };
 
   return (
@@ -66,7 +147,7 @@ export default function LearnCourse() {
       <div className="px-4 py-6 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-10">
         <BackButton />
         <h1 className="text-2xl font-bold text-gray-800 my-4">
-          {course ? course.title : "..."}
+          {course && course.title}
         </h1>
 
         <div className="grid grid-cols-2 gap-4">
@@ -108,17 +189,23 @@ export default function LearnCourse() {
           <div className="bg-slate-50 p-2 rounded-lg border-2 border-gray-100">
             <div className="">
               <span className="">Running Progress: </span>
-              <progress
-                value="50"
-                max="100"
-                className="w-full h-2 bg-gray-200 rounded-lg"
-              ></progress>
-              module: 0/5
+              <div className="">
+                <div className="bg-gray-200 relative h-2.5 w-full rounded-2xl">
+                  <div
+                    className="bg-blue-600 absolute top-0 left-0 h-full rounded-2xl"
+                    style={{ width: `${calculateProgress()}%` }} // Dynamic progress bar
+                  ></div>
+                </div>
+              </div>
+              <span className="text-sm text-gray-600">
+                {modules.length} modules, {watchedVideos.length} videos watched
+              </span>
             </div>
             {modules.map((module) => {
               const isActive = module.lectures.some(
                 (lecture) => lecture.videoUrl === currentVideo
               );
+              const isCompleted = isModuleCompleted(module._id); // Check if module is completed
 
               return (
                 <div
@@ -132,7 +219,8 @@ export default function LearnCourse() {
                     }`}
                   >
                     <h1 className="font-semibold text-[18px]">
-                      {module.title}
+                      {module.title} {isCompleted && "✅"}{" "}
+                      {/* Module completion indicator */}
                     </h1>
                     <span className=" bg-gray-200 rounded-full p-2">
                       {activeModule === module._id ? (
@@ -172,7 +260,7 @@ export default function LearnCourse() {
                       )}
                     </span>
                   </button>
-                  {/* lecture section  */}
+                  {/* Lecture section */}
                   <div
                     className={`transition-all duration-500 ease-in-out overflow-hidden ${
                       activeModule === module._id
@@ -183,18 +271,24 @@ export default function LearnCourse() {
                     <div className="text-sm text-gray-500">
                       {module.lectures.map((lecture) => (
                         <div
-                         key={lecture._id}
-                            className={`pl-8 py-2 cursor-pointer border border-stone-200/50 ${
-                              lecture.videoUrl === currentVideo
-                                ? "bg-blue-300/40"
-                                : "hover:bg-gray-100"
-                            }`}
+                          key={lecture._id}
+                          className={`pl-8 py-2 cursor-pointer border border-stone-200/50 ${
+                            lecture.videoUrl === currentVideo
+                              ? "bg-blue-300/40"
+                              : "hover:bg-gray-100"
+                          }`}
                           onClick={() =>
-                            handleVideoChange(lecture.videoUrl, lecture.pdfUrls)
+                            handleVideoChange(
+                              lecture._id,
+                              lecture.videoUrl,
+                              lecture.pdfUrls
+                            )
                           }
                         >
                           <h2 className="font-semibold text-gray-600">
-                            {lecture.lectureNumber}. {lecture.title}
+                            {lecture.lectureNumber}. {lecture.title}{" "}
+                            {watchedVideos.includes(lecture._id) && "✅"}{" "}
+                            {/* Video watched indicator */}
                           </h2>
                         </div>
                       ))}

@@ -6,7 +6,6 @@ import {
   useEffect,
   ReactNode,
 } from "react";
-import { toast } from "react-toastify";
 
 interface Course {
   _id: string;
@@ -30,12 +29,7 @@ export const CoursesProvider = ({ children }: { children: ReactNode }) => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [token, setToken] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setToken(localStorage.getItem("token"));
-    }
-  }, []);
-
+  
   const fetchCourses = async () => {
     if (!token) return;
 
@@ -43,19 +37,27 @@ export const CoursesProvider = ({ children }: { children: ReactNode }) => {
       const response = await fetch("/api/user-courses", {
         headers: { Authorization: `Bearer ${token}` },
       });
-
+      
       if (!response.ok) throw new Error("Failed to fetch courses");
 
       const data = await response.json();
       setCourses(data);
     } catch (error) {
       console.error("Error fetching courses:", error);
-      toast.error("Failed to fetch courses.");
+      console.error("Failed to fetch courses.");
     }
   };
-
+  
   useEffect(() => {
-    fetchCourses();
+    if (typeof window !== "undefined") {
+      const storedToken = localStorage.getItem("token");
+      setToken(storedToken);
+      if (storedToken) {
+        fetchCourses();
+      } else {
+        console.log(false);
+      }
+    }
   }, []);
 
   return (

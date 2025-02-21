@@ -15,7 +15,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, roles 
 
   useEffect(() => {
     if (!user && pathname !== "/") {
-      router.push("/login");
+      router.push("/auth/login");
     }
   }, [user, router, pathname]);
 
