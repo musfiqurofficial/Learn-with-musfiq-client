@@ -62,7 +62,7 @@ export default function LearnCourse() {
   useEffect(() => {
     const fetchWatchedVideos = async () => {
       try {
-        const response = await fetch("/api/user/watched-videos", {
+        const response = await fetch("/api/watched-videos", {
           headers: { Authorization: `Bearer ${token}` },
         });
   
@@ -70,14 +70,14 @@ export default function LearnCourse() {
   
         const data = await response.json();
         if (Array.isArray(data.watchedVideos)) {
-          setWatchedVideos(data.watchedVideos); // Update the watched videos state
+          setWatchedVideos(data.watchedVideos);
         } else {
           console.error("Invalid watched videos data:", data);
-          setWatchedVideos([]); // Fallback to an empty array
+          setWatchedVideos([]); 
         }
       } catch (error) {
         console.error("Error fetching watched videos:", error);
-        setWatchedVideos([]); // Fallback to an empty array
+        setWatchedVideos([]); 
       }
     };
   
