@@ -59,33 +59,6 @@ export default function LearnCourse() {
     fetchModules();
   }, [Id]);
 
-  useEffect(() => {
-    const fetchWatchedVideos = async () => {
-      try {
-        const response = await fetch("/api/user/watched-videos", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-  
-        if (!response.ok) throw new Error("Failed to fetch watched videos");
-  
-        const data = await response.json();
-        if (Array.isArray(data.watchedVideos)) {
-          setWatchedVideos(data.watchedVideos); // Update the watched videos state
-        } else {
-          console.error("Invalid watched videos data:", data);
-          setWatchedVideos([]); // Fallback to an empty array
-        }
-      } catch (error) {
-        console.error("Error fetching watched videos:", error);
-        setWatchedVideos([]); // Fallback to an empty array
-      }
-    };
-  
-    if (token) {
-      fetchWatchedVideos();
-    }
-  }, [token]);
-
   const toggleModule = (moduleId: string) => {
     setActiveModule(activeModule === moduleId ? null : moduleId);
   };
@@ -308,7 +281,6 @@ export default function LearnCourse() {
                           <h2 className="font-semibold text-gray-600">
                             {lecture.lectureNumber}. {lecture.title}{" "}
                             {watchedVideos.includes(lecture._id) && "✅"}{" "}
-                            {/* Video watched indicator */}
                           </h2>
                         </div>
                       ))}
