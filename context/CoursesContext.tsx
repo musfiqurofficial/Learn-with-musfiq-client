@@ -1,5 +1,11 @@
 "use client";
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import { toast } from "react-toastify";
 
 interface Course {
@@ -13,7 +19,7 @@ interface Course {
 
 interface CoursesContextType {
   courses: Course[];
-  setCourses: React.Dispatch<React.SetStateAction<Course[]>>; 
+  setCourses: React.Dispatch<React.SetStateAction<Course[]>>;
   fetchCourses: () => void;
   token: string | null;
 }
@@ -22,7 +28,13 @@ const CoursesContext = createContext<CoursesContextType | undefined>(undefined);
 
 export const CoursesProvider = ({ children }: { children: ReactNode }) => {
   const [courses, setCourses] = useState<Course[]>([]);
-  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setToken(localStorage.getItem("token"));
+    }
+  }, []);
 
   const fetchCourses = async () => {
     if (!token) return;
@@ -47,7 +59,9 @@ export const CoursesProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <CoursesContext.Provider value={{ courses, setCourses, fetchCourses, token }}>
+    <CoursesContext.Provider
+      value={{ courses, setCourses, fetchCourses, token }}
+    >
       {children}
     </CoursesContext.Provider>
   );
@@ -55,6 +69,7 @@ export const CoursesProvider = ({ children }: { children: ReactNode }) => {
 
 export const useCourses = () => {
   const context = useContext(CoursesContext);
-  if (!context) throw new Error("useCourses must be used within a CoursesProvider");
+  if (!context)
+    throw new Error("useCourses must be used within a CoursesProvider");
   return context;
 };

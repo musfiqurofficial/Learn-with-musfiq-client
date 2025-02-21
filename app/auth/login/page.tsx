@@ -62,13 +62,16 @@ export default function Login() {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      router.push("/");
-    } else {
-      setLoading(false);
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      if (token) {
+        router.push("/");
+      } else {
+        setLoading(false);
+      }
     }
   }, [router]);
+  
 
   if (loading) return <Loading />;
 

@@ -34,39 +34,46 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const storedToken = localStorage.getItem("token");
-      if (storedToken) {
-        try {
-          const response = await fetch("/api/auth/me", {
-            headers: {
-              Authorization: `Bearer ${storedToken}`,
-            },
-          });
-          if (response.ok) {
-            const userData = await response.json();
-            setUser(userData);
-            setToken(storedToken);
-          } else {
-            localStorage.removeItem("token");
+      if (typeof window !== "undefined") {
+        const storedToken = localStorage.getItem("token");
+        if (storedToken) {
+          try {
+            const response = await fetch("/api/auth/me", {
+              headers: {
+                Authorization: `Bearer ${storedToken}`,
+              },
+            });
+            if (response.ok) {
+              const userData = await response.json();
+              setUser(userData);
+              setToken(storedToken);
+            } else {
+              localStorage.removeItem("token");
+            }
+          } catch (error) {
+            console.error("Failed to fetch user:", error);
           }
-        } catch (error) {
-          console.error("Failed to fetch user:", error);
+        } else {
+          setLoading(false);
         }
       }
-      setLoading(false);
     };
 
     fetchUser();
   }, []);
 
   const login = (user: User, token: string) => {
-    localStorage.setItem("token", token);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("token", token);
+    }
     setUser(user);
     setToken(token);
   };
 
   const logout = () => {
-    localStorage.removeItem("token");
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("token");
+    }
     setUser(null);
     setToken(null);
     toast.error("Logout");

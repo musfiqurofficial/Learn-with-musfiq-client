@@ -48,7 +48,8 @@ export default function Navbar() {
     return null;
   }
 
-  const token = localStorage.getItem("token");
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
   return (
     <nav ref={dropdownRef} className="shadow bg-[#fafafa] sticky top-0 z-50">

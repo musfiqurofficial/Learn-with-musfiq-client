@@ -53,6 +53,8 @@ const CourseDetails: React.FC = () => {
   }, [courseId, user]);
 
   const handleAdmission = async () => {
+    if (typeof window === "undefined") return;
+
     const token = localStorage.getItem("token");
     if (!token) {
       toast.error("Authentication required! Please log in.");

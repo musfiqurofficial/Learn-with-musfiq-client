@@ -9,15 +9,6 @@ const MyCourses = () => {
   const { courses, setCourses } = useCourses();
   const { user, token } = useAuth();
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      if (!sessionStorage.getItem("reloaded")) {
-        sessionStorage.setItem("reloaded", "true");
-        window.location.replace(window.location.href);
-      }
-    }
-  }, []);
   
   useEffect(() => {
     const fetchEnrolledCourses = async () => {
