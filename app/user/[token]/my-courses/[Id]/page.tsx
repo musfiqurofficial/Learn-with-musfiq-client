@@ -59,12 +59,41 @@ export default function LearnCourse() {
     fetchModules();
   }, [Id]);
 
+  useEffect(() => {
+    const fetchWatchedVideos = async () => {
+      try {
+        const response = await fetch("/api/user/watched-videos", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+  
+        if (!response.ok) throw new Error("Failed to fetch watched videos");
+  
+        const data = await response.json();
+        if (Array.isArray(data.watchedVideos)) {
+          setWatchedVideos(data.watchedVideos); // Update the watched videos state
+        } else {
+          console.error("Invalid watched videos data:", data);
+          setWatchedVideos([]); // Fallback to an empty array
+        }
+      } catch (error) {
+        console.error("Error fetching watched videos:", error);
+        setWatchedVideos([]); // Fallback to an empty array
+      }
+    };
+  
+    if (token) {
+      fetchWatchedVideos();
+    }
+  }, [token]);
+
   const toggleModule = (moduleId: string) => {
     setActiveModule(activeModule === moduleId ? null : moduleId);
   };
 
   const markVideoAsWatched = async (lectureId: string) => {
     try {
+      console.log("Marking video as watched:", { lectureId, activeModule, Id, token });
+  
       const response = await fetch(
         `/api/courses/${Id}/modules/${activeModule}/lectures/${lectureId}/watch`,
         {
@@ -74,26 +103,27 @@ export default function LearnCourse() {
           },
         }
       );
-
+  
       if (!response.ok) {
         const errorData = await response.json();
         if (errorData.message === "Video already watched") {
           console.log("Video already watched:", lectureId);
-          setWatchedVideos((prev) => [...prev, lectureId]);
+          setWatchedVideos((prev) => [...prev, lectureId]); // Update the state even if already watched
           return;
         }
         throw new Error(errorData.message || "Failed to mark video as watched");
       }
-
+  
       const data = await response.json();
       console.log("Video marked as watched:", data);
-      setWatchedVideos((prev) => [...prev, lectureId]);
+      setWatchedVideos((prev) => [...prev, lectureId]); // Update the state
       toast.success(data.message);
     } catch (error) {
       console.error("Error marking video as watched:", error);
       toast.error("Failed to mark video as watched");
     }
   };
+  
 
   const handleVideoChange = async (
     lectureId: string,
@@ -102,35 +132,38 @@ export default function LearnCourse() {
   ) => {
     setCurrentVideo(videoUrl);
     setCurrentPdfUrls(pdfUrls);
-
+  
     if (!activeModule) {
       console.error("No active module selected");
       toast.error("Please select a module first");
       return;
     }
-
+  
     if (!watchedVideos.includes(lectureId)) {
-      await markVideoAsWatched(lectureId);
+      await markVideoAsWatched(lectureId); // Mark the video as watched
     }
   };
 
   const calculateProgress = () => {
-    if (!course || !modules.length) return 0;
-
+    if (!course || !modules.length || !Array.isArray(watchedVideos)) return 0;
+  
+    // Get all lecture IDs in the course
     const totalVideos = modules.flatMap((module) => module.lectures).length;
-
+  
+    // Get the number of watched videos
     const watchedCount = modules
       .flatMap((module) => module.lectures)
       .filter((lecture) => watchedVideos.includes(lecture._id)).length;
-
+  
+    // Calculate progress percentage
     return (watchedCount / totalVideos) * 100;
   };
 
   const isModuleCompleted = (moduleId: string) => {
-    const selectedModule = modules.find((m) => m._id === moduleId);
-    if (!selectedModule) return false;
-
-    return selectedModule.lectures.every((lecture) =>
+    const module = modules.find((module) => module._id === moduleId);
+    if (!module || !Array.isArray(watchedVideos)) return false;
+  
+    return module.lectures.every((lecture) =>
       watchedVideos.includes(lecture._id)
     );
   };
