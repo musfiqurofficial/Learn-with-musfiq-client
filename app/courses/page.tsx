@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import CourseCard from "@/components/CourseCard";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 interface Course {
   _id: string;
@@ -31,7 +30,6 @@ const Courses = () => {
   }, []);
 
   return (
-    <ProtectedRoute roles={["user", "admin"]}>
       <div className="px-4 py-8 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-10">
         <h2 className="text-[32px] font-bold text-center text-gray-700 my-4">
           Our Courses
@@ -46,7 +44,6 @@ const Courses = () => {
           )}
         </div>
       </div>
-    </ProtectedRoute>
   );
 };
 

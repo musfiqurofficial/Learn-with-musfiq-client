@@ -1,6 +1,4 @@
 "use client";
-
-import { redirect } from "next/navigation";
 import {
   createContext,
   useContext,
@@ -8,7 +6,6 @@ import {
   useEffect,
   ReactNode,
 } from "react";
-import { toast } from "react-toastify";
 
 interface User {
   name: string;
@@ -29,6 +26,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -37,10 +35,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (storedToken) {
           try {
             const response = await fetch("/api/auth/me", {
-              headers: {
-                Authorization: `Bearer ${storedToken}`,
-              },
+              headers: { Authorization: `Bearer ${storedToken}` },
             });
+
             if (response.ok) {
               const userData = await response.json();
               setUser(userData);
@@ -51,10 +48,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           } catch (error) {
             console.error("Failed to fetch user:", error);
           }
-        } else {
-          console.log(false);
         }
       }
+      setLoading(false);
     };
 
     fetchUser();
@@ -74,13 +70,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
     setUser(null);
     setToken(null);
-    toast.error("Logout");
-    redirect("/auth/login");
   };
 
   return (
     <AuthContext.Provider value={{ user, token, login, logout }}>
-      {children}
+      {!loading && children}
     </AuthContext.Provider>
   );
 };

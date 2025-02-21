@@ -1,17 +1,29 @@
 "use client";
-import { useRouter } from 'next/navigation';
-import { useAuth } from '../context/AuthContext';
-import { useEffect } from 'react';
+import { useAuth } from "@/context/AuthContext";
+import { useRouter, usePathname } from "next/navigation";
+import { useEffect } from "react";
 
-export const ProtectedRoute = ({ children, roles }: { children: React.ReactNode; roles: string[] }) => {
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+  roles: string[];
+}
+
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, roles }) => {
   const { user } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    if (!user || !roles.includes(user.role)) {
-      router.push('/auth/login');
+    if (!user && pathname !== "/") {
+      router.push("/login");
     }
-  }, [user, roles, router]);
+  }, [user, router, pathname]);
 
-  return <>{user && roles.includes(user.role) ? children : null}</>;
+  if (!user && pathname !== "/") return null;
+
+  if (user && !roles.includes(user.role)) {
+    return <p className="text-center text-red-500">Access Denied</p>;
+  }
+
+  return <>{children}</>;
 };
