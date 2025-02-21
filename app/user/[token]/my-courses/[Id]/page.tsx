@@ -160,10 +160,10 @@ export default function LearnCourse() {
   };
 
   const isModuleCompleted = (moduleId: string) => {
-    const module = modules.find((module) => module._id === moduleId);
-    if (!module || !Array.isArray(watchedVideos)) return false;
+    const moduleC = modules.find((module) => module._id === moduleId);
+    if (!moduleC || !Array.isArray(watchedVideos)) return false;
   
-    return module.lectures.every((lecture) =>
+    return moduleC.lectures.every((lecture) =>
       watchedVideos.includes(lecture._id)
     );
   };
