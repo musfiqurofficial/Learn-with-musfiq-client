@@ -59,19 +59,39 @@ export default function LearnCourse() {
     fetchModules();
   }, [Id]);
 
+  useEffect(() => {
+    const fetchWatchedVideos = async () => {
+      try {
+        const response = await fetch("/api/user/watched-videos", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+  
+        if (!response.ok) throw new Error("Failed to fetch watched videos");
+  
+        const data = await response.json();
+        if (Array.isArray(data.watchedVideos)) {
+          setWatchedVideos(data.watchedVideos); // Update the watched videos state
+        } else {
+          console.error("Invalid watched videos data:", data);
+          setWatchedVideos([]); // Fallback to an empty array
+        }
+      } catch (error) {
+        console.error("Error fetching watched videos:", error);
+        setWatchedVideos([]); // Fallback to an empty array
+      }
+    };
+  
+    if (token) {
+      fetchWatchedVideos();
+    }
+  }, [token]);
+
   const toggleModule = (moduleId: string) => {
     setActiveModule(activeModule === moduleId ? null : moduleId);
   };
 
   const markVideoAsWatched = async (lectureId: string) => {
     try {
-      console.log("Marking video as watched:", {
-        lectureId,
-        activeModule,
-        Id,
-        token,
-      });
-
       const response = await fetch(
         `/api/courses/${Id}/modules/${activeModule}/lectures/${lectureId}/watch`,
         {
