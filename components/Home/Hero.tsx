@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-
 export const Hero = () => {
   return (
     <div className="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
@@ -28,26 +27,26 @@ export const Hero = () => {
               projects.
             </p>
 
-          <button className="inline-flex items-center font-semibold transition-colors duration-200 bg-blue-600 hover:bg-blue-800 mt-4 px-4 py-3 text-white">
-            <Link href="/courses">Browse Courses</Link>
-          </button>
+            <button className="inline-flex items-center font-semibold transition-colors duration-200 bg-blue-600 hover:bg-blue-800 mt-4 px-4 py-3 text-white rounded">
+              <Link href="/courses">Browse Courses</Link>
+            </button>
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-6">
-          <div className="p-6 text-center bg-gray-100 rounded-lg shadow-md">
+          <div className="p-6 text-center bg-gray-100 rounded-lg shadow-md flex flex-col justify-center">
             <h3 className="text-3xl font-bold text-blue-600">50+</h3>
             <p className="text-gray-600">Courses Available</p>
           </div>
-          <div className="p-6 text-center bg-gray-100 rounded-lg shadow-md">
+          <div className="p-6 text-center bg-gray-100 rounded-lg shadow-md flex flex-col justify-center">
             <h3 className="text-3xl font-bold text-blue-600">10K+</h3>
             <p className="text-gray-600">Enrolled Students</p>
           </div>
-          <div className="p-6 text-center bg-gray-100 rounded-lg shadow-md">
+          <div className="p-6 text-center bg-gray-100 rounded-lg shadow-md flex flex-col justify-center">
             <h3 className="text-3xl font-bold text-blue-600">200+</h3>
             <p className="text-gray-600">Expert Instructors</p>
           </div>
-          <div className="p-6 text-center bg-gray-100 rounded-lg shadow-md">
+          <div className="p-6 text-center bg-gray-100 rounded-lg shadow-md flex flex-col justify-center">
             <h3 className="text-3xl font-bold text-blue-600">95%</h3>
             <p className="text-gray-600">Positive Reviews</p>
           </div>
