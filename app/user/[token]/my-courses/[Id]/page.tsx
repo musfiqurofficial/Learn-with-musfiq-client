@@ -239,8 +239,8 @@ export default function LearnCourse() {
                       isActive ? "bg-blue-500 text-white shadow" : ""
                     }`}
                   >
-                    <h1 className="font-semibold text-[18px]">
-                      {module.title} {isCompleted && "✅"}{" "}
+                    <h1 className="font-semibold text-[18px] text-start">
+                    Module {module.moduleNumber}: {module.title} {isCompleted && "✅"}{" "}
                       {/* Module completion indicator */}
                     </h1>
                     <span className=" bg-gray-200 rounded-full p-2">
