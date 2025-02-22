@@ -174,11 +174,12 @@ export default function LearnCourse() {
           <div className="border-2 border-gray-100 bg-slate-50 rounded-lg p-4">
             {currentVideo ? (
               <iframe
-                width="560"
+                width="auto"
                 height="315"
                 src={currentVideo}
                 title="YouTube video player"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                className="w-full"
                 allowFullScreen
               ></iframe>
             ) : (
