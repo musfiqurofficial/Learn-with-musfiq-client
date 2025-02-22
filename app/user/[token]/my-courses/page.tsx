@@ -53,17 +53,17 @@ const MyCourses = () => {
             You have not enrolled in any courses yet.
           </p>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
             {courses.map((course) => (
               <div
                 key={course._id}
-                className="w-full flex items-center gap-4 p-4 bg-gray-300/30"
+                className="w-full flex flex-col lg:flex-row items-center gap-4 p-4 bg-gray-300/30"
               >
                 <div className="rounded-lg shadow-md">
                   <img
                     src={course.thumbnail}
                     alt={course.title}
-                    className="w-full h-auto max-h-[140px] object-cover rounded-lg"
+                    className="w-full h-auto lg:max-h-[140px] object-cover rounded-lg"
                   />
                 </div>
                 <div className="">
@@ -72,7 +72,7 @@ const MyCourses = () => {
                   </h3>
                   <Link
                     href={`/user/${token}/my-courses/${course._id}`}
-                    className="px-4 py-3 text-white rounded bg-blue-600 hover:bg-blue-500 "
+                    className="px-4 py-3 text-white rounded bg-blue-600 hover:bg-blue-500 flex justify-center lg:flex-none"
                   >
                     Start Course
                   </Link>
