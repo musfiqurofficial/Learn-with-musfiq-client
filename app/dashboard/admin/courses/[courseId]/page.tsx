@@ -360,7 +360,7 @@ export default function CourseManagement() {
                     }`}
                   >
                     <div className="relative group ">
-                      <h1 className="font-semibold text-[18px]">
+                      <h1 className="font-semibold text-[18px] text-start">
                         Module {module.moduleNumber}: {module.title}
                       </h1>
                       <TbEdit
