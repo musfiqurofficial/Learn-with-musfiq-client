@@ -170,7 +170,7 @@ export default function LearnCourse() {
           {course && course.title}
         </h1>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid lg:grid-cols-2 gap-4">
           <div className="border-2 border-gray-100 bg-slate-50 rounded-lg p-4">
             {currentVideo ? (
               <iframe
