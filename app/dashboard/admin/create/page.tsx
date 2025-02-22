@@ -4,8 +4,7 @@ import BackButton from "@/components/BackButton";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import React, { useState, useEffect } from "react";
 import { MdAddBox } from "react-icons/md";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast, ToastContainer } from "react-toastify";
 
 interface Course {
   _id: string;
@@ -332,6 +331,7 @@ function Create() {
           </form>
         </div>
       </div>
+      <ToastContainer />
     </ProtectedRoute>
   );
 }
