@@ -180,7 +180,7 @@ function Create() {
     <ProtectedRoute roles={["admin"]}>
       <div className="px-4 py-6 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-10">
         <BackButton />
-        <h1 className="text-2xl font-bold mb-10 text-center">
+        <h1 className="text-2xl font-bold mb-10">
           Course Management
         </h1>
 
