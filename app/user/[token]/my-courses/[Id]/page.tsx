@@ -92,8 +92,6 @@ export default function LearnCourse() {
 
   const markVideoAsWatched = async (lectureId: string) => {
     try {
-      console.log("Marking video as watched:", { lectureId, activeModule, Id, token });
-  
       const response = await fetch(
         `/api/courses/${Id}/modules/${activeModule}/lectures/${lectureId}/watch`,
         {
@@ -108,7 +106,7 @@ export default function LearnCourse() {
         const errorData = await response.json();
         if (errorData.message === "Video already watched") {
           console.log("Video already watched:", lectureId);
-          setWatchedVideos((prev) => [...prev, lectureId]); // Update the state even if already watched
+          setWatchedVideos((prev) => [...prev, lectureId]); 
           return;
         }
         throw new Error(errorData.message || "Failed to mark video as watched");
@@ -116,14 +114,13 @@ export default function LearnCourse() {
   
       const data = await response.json();
       console.log("Video marked as watched:", data);
-      setWatchedVideos((prev) => [...prev, lectureId]); // Update the state
+      setWatchedVideos((prev) => [...prev, lectureId]); 
       toast.success(data.message);
     } catch (error) {
       console.error("Error marking video as watched:", error);
       toast.error("Failed to mark video as watched");
     }
   };
-  
 
   const handleVideoChange = async (
     lectureId: string,
@@ -140,22 +137,19 @@ export default function LearnCourse() {
     }
   
     if (!watchedVideos.includes(lectureId)) {
-      await markVideoAsWatched(lectureId); // Mark the video as watched
+      await markVideoAsWatched(lectureId); 
     }
   };
 
   const calculateProgress = () => {
     if (!course || !modules.length || !Array.isArray(watchedVideos)) return 0;
   
-    // Get all lecture IDs in the course
     const totalVideos = modules.flatMap((module) => module.lectures).length;
   
-    // Get the number of watched videos
     const watchedCount = modules
       .flatMap((module) => module.lectures)
       .filter((lecture) => watchedVideos.includes(lecture._id)).length;
   
-    // Calculate progress percentage
     return (watchedCount / totalVideos) * 100;
   };
 
