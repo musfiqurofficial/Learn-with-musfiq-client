@@ -259,8 +259,8 @@ function Create() {
 
           {/* Lecture Management Form */}
           <form className="mb-6" onSubmit={handleLectureSubmit}>
-            <h2 className="text-xl font-semibold mb-2">Add Lecture</h2>
-            <span className="text-red-500 text-[12px]">Select your right module first</span>
+            <h2 className="text-xl font-semibold mb-2">Add Lecture <span className="text-red-500 text-[12px] font-light">(Select your right module first)</span></h2>
+            
             <select
               value={selectedModule}
               onChange={(e) => setSelectedModule(e.target.value)}
