@@ -256,7 +256,7 @@ export default function Navbar() {
             <ul className="flex items-center hidden space-x-2 lg:flex">
               <li>
                 <button
-                  className={`font-medium tracking-wide transition-transform duration-300  hover:bg-gray-100 px-4 py-2 rounded`}
+                  className={`font-medium tracking-wide transition-transform duration-300 hover:bg-gray-100 px-4 py-2 rounded`}
                 >
                   <Link href="/auth/login">Sign in</Link>
                 </button>
@@ -291,7 +291,8 @@ export default function Navbar() {
               </svg>
             </button>
             {isMenuOpen && (
-              <div className="absolute top-0 left-0 w-full">
+              <div 
+               className="absolute top-0 left-0 w-full">
                 <div className="p-5 bg-white border rounded shadow-sm">
                   <div className="flex items-center justify-between mb-4">
                     <div className="w-full">
@@ -381,11 +382,7 @@ export default function Navbar() {
                         <>
                           <li>
                             <button
-                              className={`font-medium tracking-wide transition-transform duration-300  hover:bg-gray-100 px-4 py-2 rounded ${
-                                isActiveLink("/")
-                                  ? "bg-gray-100 px-4 py-2 rounded shadow-sm"
-                                  : ""
-                              }`}
+                              className={`font-medium tracking-wide transition-transform duration-300  hover:bg-gray-100 px-4 py-2 rounded`}
                             >
                               <Link href="/auth/login">Sign in</Link>
                             </button>
