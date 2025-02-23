@@ -22,10 +22,13 @@ export default function Navbar() {
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
+    setIsMenuOpen(!isMenuOpen);
+    
   };
 
   const closeDropdown = () => {
     setIsOpen(false);
+    setIsMenuOpen(false);
   };
 
   useEffect(() => {
