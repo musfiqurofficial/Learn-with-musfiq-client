@@ -72,7 +72,7 @@ export default function Navbar() {
               {isOpen && (
                 <div
                   onClick={(e) => e.stopPropagation()}
-                  className="absolute left-0 z-50 w-56 py-2 mt-2 overflow-hidden origin-top-right bg-white rounded-md shadow-xl "
+                  className="absolute left-0 z-50 min-w-[280px] py-2 mt-2 overflow-hidden origin-top-right bg-white rounded-md shadow-xl "
                 >
                   <a
                     href="#"
@@ -204,7 +204,7 @@ export default function Navbar() {
               {isOpen && (
                 <div
                   onClick={(e) => e.stopPropagation()}
-                  className="absolute right-0 z-50 w-56 py-2 mt-2 overflow-hidden origin-top-right bg-white rounded-md shadow-xl "
+                  className="absolute right-0 z-50 w-full min-w-[280px] py-2 mt-2 overflow-hidden origin-top-right bg-white rounded-md shadow-xl "
                 >
                   <a
                     href="#"

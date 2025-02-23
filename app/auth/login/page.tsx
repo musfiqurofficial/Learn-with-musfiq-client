@@ -69,7 +69,7 @@ export default function Login() {
       }
     }
   }, [router]);
-  
+
   return (
     <div className="flex min-h-[95vh] flex-col items-center justify-center">
       <h1 className="text-[24px] font-bold text-gray-600">
@@ -93,7 +93,7 @@ export default function Login() {
             <p className="text-red-500 text-[12px]">Invalid email format.</p>
           )}
         </div>
-        <div className="mb-4 ">
+        <div className="mb-3">
           <label className="block text-gray-700">Password</label>
           <div className="relative">
             <input
@@ -115,6 +115,11 @@ export default function Login() {
               )}
             </span>
           </div>
+          <Link href="/auth/forgot-password">
+            <span className="text-blue-500 hover:underline text-[14px] text-end w-full block mt-1">
+              Forgotten password?
+            </span>
+          </Link>
           {password.length > 0 && password.length < 6 && (
             <p className="text-red-500 text-[12px]">
               Password must be at least 6 characters.
