@@ -19,8 +19,6 @@ const nextConfig: NextConfig = {
   images: {
     domains: [""],
   },
-  swcMinify: true,
-
   webpack(config) {
     return config;
   },

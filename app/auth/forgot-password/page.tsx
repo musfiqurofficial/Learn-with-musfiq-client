@@ -1,13 +1,14 @@
 "use client";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { useState } from "react";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation"; 
 
 export default function ForgetEmail() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter(); 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,14 +23,17 @@ export default function ForgetEmail() {
 
       const data = await response.json();
       console.log("Response data:", data);
+
       if (response.ok) {
         toast.success("Check your email for a password reset link.");
-        redirect("/auth/login");
+        setTimeout(() => {
+          router.push("/"); 
+        }, 2000);
       } else {
         toast.error(data.message);
       }
-    } catch {
-      toast.error("Something went wrong. Try again later.");
+    } catch (error) {
+      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -40,9 +44,7 @@ export default function ForgetEmail() {
       <div className="container flex flex-col items-center justify-center min-h-screen px-6 py-12 mx-auto">
         <form onSubmit={handleSubmit} className="w-full max-w-sm">
           <h2 className="text-xl font-bold">Forgot Password?</h2>
-          <p className="text-gray-500">
-            Enter your email to reset your password.
-          </p>
+          <p className="text-gray-500">Enter your email to reset your password.</p>
           <input
             type="email"
             placeholder="Enter your email"

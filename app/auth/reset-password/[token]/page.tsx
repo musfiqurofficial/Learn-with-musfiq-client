@@ -1,19 +1,17 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import { IoIosArrowRoundBack } from "react-icons/io";
 
-export default function ResetPassword({
-  params,
-}: {
-  params: { token: string };
-}) {
+export default function ResetPassword() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  const { token } = useParams();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,7 +23,7 @@ export default function ResetPassword({
     setLoading(true);
 
     try {
-      const response = await fetch(`/api/auth/reset-password/${params.token}`, {
+      const response = await fetch(`/api/auth/reset-password/${token}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password }),
