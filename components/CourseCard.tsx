@@ -19,11 +19,11 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
       <img
         src={course.thumbnail}
         alt={course.title}
-        className="w-full h-48 object-cover"
+        className="w-full h-auto sm:max-h-48 object-cover"
       />
       <div className="p-4">
         <h3 className="text-xl font-semibold">{course.title}</h3>
-        <div className="flex justify-between items-center mt-4">
+        <div className="flex flex-row sm:flex-col lg:flex-row justify-between items-center mt-4 gap-y-4">
           <p className="text-[16px] font-semibold text-gray-700">
             Course Fee: {course.price.toLocaleString("en-IN")} BDT
           </p>
