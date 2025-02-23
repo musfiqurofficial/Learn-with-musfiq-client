@@ -27,7 +27,10 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
         </h3>
         <div className="flex flex-row sm:flex-col lg:flex-row justify-between items-center mt-4 gap-y-2">
           <p className="text-[14px] text-gray-700 font-normal">
-            Course Fee: <span className="text-[16px] font-bold">{course.price.toLocaleString("en-IN")}</span>{" "}
+            Course Fee:{" "}
+            <span className="text-[16px] font-bold">
+              {course.price.toLocaleString("en-IN")}
+            </span>{" "}
             BDT
           </p>
 
