@@ -15,15 +15,15 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
   const router = useRouter();
 
   return (
-    <div className="course-card border rounded-lg shadow-lg overflow-hidden">
+    <div className="w-auto max-w-[360px] sm:max-w-full mx-auto border rounded-lg shadow-lg overflow-hidden ">
       <img
         src={course.thumbnail}
         alt={course.title}
         className="w-full h-auto sm:max-h-48 object-cover"
       />
-      <div className="p-4">
-        <h3 className="text-xl font-semibold">{course.title}</h3>
-        <div className="flex flex-row sm:flex-col lg:flex-row justify-between items-center mt-4 gap-y-4">
+      <div className="px-4 py-3">
+        <h3 className="text[24px] font-semibold text-blue-500">{course.title}</h3>
+        <div className="flex flex-row sm:flex-col lg:flex-row justify-between items-center mt-4 gap-y-2">
           <p className="text-[16px] font-semibold text-gray-700">
             Course Fee: {course.price.toLocaleString("en-IN")} BDT
           </p>
