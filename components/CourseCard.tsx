@@ -22,10 +22,13 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
         className="w-full h-auto sm:max-h-48 object-cover"
       />
       <div className="px-4 py-3">
-        <h3 className="text[24px] font-semibold text-blue-500">{course.title}</h3>
+        <h3 className="text[24px] font-semibold text-blue-500">
+          {course.title}
+        </h3>
         <div className="flex flex-row sm:flex-col lg:flex-row justify-between items-center mt-4 gap-y-2">
-          <p className="text-[16px] font-semibold text-gray-700">
-            Course Fee: {course.price.toLocaleString("en-IN")} BDT
+          <p className="text-[14px] text-gray-700 font-normal">
+            Course Fee: <span className="text-[16px] font-bold">{course.price.toLocaleString("en-IN")}</span>{" "}
+            BDT
           </p>
 
           <button
