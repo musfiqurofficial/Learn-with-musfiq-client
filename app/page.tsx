@@ -52,7 +52,7 @@ const Home: React.FC = () => {
         {courses.length > 3 && (
           <center>
             <button className="mt-8 px-6 py-3 bg-blue-600 text-white rounded mb-10">
-              <Link href="/courses">View Courses</Link>
+              <Link href="/courses">All Courses</Link>
             </button>
           </center>
         )}
