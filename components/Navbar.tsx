@@ -4,13 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import Link from "next/link";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 import userImg from "../public/profile-white.png";
 import { usePathname } from "next/navigation";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -20,14 +21,17 @@ export default function Navbar() {
     return pathname === href;
   };
 
-  const toggleDropdown = () => {
+  const toggleDropdownMenu = () => {
     setIsOpen(!isOpen);
-    setIsMenuOpen(!isMenuOpen);
   };
 
   const closeDropdown = () => {
     setIsOpen(false);
     setIsMenuOpen(false);
+  };
+
+  const handleMenuItemClick = () => {
+    closeDropdown();
   };
 
   useEffect(() => {
@@ -59,7 +63,7 @@ export default function Navbar() {
         <div className="relative flex items-center justify-between">
           {user && (
             <div className="relative inline-block lg:hidden">
-              <button onClick={toggleDropdown} className="">
+              <button onClick={toggleDropdownMenu} className="">
                 <Image
                   className="flex-shrink-0 object-cover rounded-full w-14 h-14"
                   src={userImg}
@@ -70,9 +74,19 @@ export default function Navbar() {
               </button>
 
               {isOpen && (
-                <div
-                  onClick={(e) => e.stopPropagation()}
-                  className="absolute left-0 z-50 min-w-[280px] py-2 mt-2 overflow-hidden origin-top-right bg-white rounded-md shadow-xl "
+                <motion.div
+                  ref={dropdownRef}
+                  initial={{ opacity: 0, scale: 0.9, y: -10 }}
+                  animate={
+                    isOpen
+                      ? { opacity: 1, scale: 1, y: 0 }
+                      : { opacity: 0, scale: 0.9, y: -10 }
+                  }
+                  exit={{ opacity: 0, scale: 0.9, y: -10 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  className={`absolute left-0 z-50 min-w-[280px] py-2 mt-2 overflow-hidden origin-top-right bg-white rounded-md shadow-xl ${
+                    isOpen ? "block" : "hidden"
+                  }`}
                 >
                   <a
                     href="#"
@@ -95,31 +109,37 @@ export default function Navbar() {
 
                   <Link
                     href={`/user/${token}/my-courses`}
-                    className="block px-4 py-3 text-sm capitalize transition-colors duration-300 transform  hover:bg-gray-100  "
+                    className="block px-4 py-3 text-sm capitalize transition-colors duration-300 transform  hover:bg-gray-100"
+                    onClick={handleMenuItemClick}
                   >
                     My Course
                   </Link>
                   <a
                     href="#"
-                    className="block px-4 py-3 text-sm capitalize transition-colors duration-300 transform  hover:bg-gray-100  "
+                    className="block px-4 py-3 text-sm capitalize transition-colors duration-300 transform  hover:bg-gray-100"
+                    onClick={handleMenuItemClick}
                   >
                     View profile
                   </a>
                   <hr className="border-gray-200 " />
                   <a
                     href="#"
-                    className="block px-4 py-3 text-sm capitalize transition-colors duration-300 transform  hover:bg-gray-100  "
+                    className="block px-4 py-3 text-sm capitalize transition-colors duration-300 transform  hover:bg-gray-100"
+                    onClick={handleMenuItemClick}
                   >
                     Settings
                   </a>
 
                   <button
-                    onClick={logout}
-                    className="block w-full text-start px-4 py-3 text-sm  capitalize transition-colors duration-300 transform  hover:bg-red-100  "
+                    onClick={() => {
+                      logout();
+                      handleMenuItemClick();
+                    }}
+                    className="block w-full text-start px-4 py-3 text-sm  capitalize transition-colors duration-300 transform  hover:bg-red-100"
                   >
                     Sign Out
                   </button>
-                </div>
+                </motion.div>
               )}
             </div>
           )}
@@ -184,8 +204,8 @@ export default function Navbar() {
           {user ? (
             <div className="relative lg:inline-block hidden">
               <button
-                onClick={toggleDropdown}
-                className="relative z-10 inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide transition duration-300 rounded shadow-md bg-blue-600 hover:bg-blue-400 text-white focus:shadow-outline focus:outline-none"
+                onClick={toggleDropdownMenu}
+                className="relative z-10 inline-flex items-center justify-center py-2 px-6 font-medium tracking-wide transition duration-300 rounded-full shadow-md bg-blue-600/30 hover:bg-blue-600 text-stone-50 leading-3 focus:shadow-outline focus:outline-none"
               >
                 <span className="mx-1">{user.name}</span>
                 <svg
@@ -202,10 +222,20 @@ export default function Navbar() {
               </button>
 
               {isOpen && (
-                <div
-                  onClick={(e) => e.stopPropagation()}
-                  className="absolute right-0 z-50 w-full min-w-[280px] py-2 mt-2 overflow-hidden origin-top-right bg-white rounded-md shadow-xl "
-                >
+                <motion.div
+                ref={dropdownRef}
+                initial={{ opacity: 0, scale: 0.9, y: -10 }}
+                animate={
+                  isOpen
+                    ? { opacity: 1, scale: 1, y: 0 }
+                    : { opacity: 0, scale: 0.9, y: -10 }
+                }
+                exit={{ opacity: 0, scale: 0.9, y: -10 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className={`absolute right-0 z-50 min-w-[280px] py-2 mt-2 overflow-hidden origin-top-right bg-white rounded-md shadow-xl ${
+                  isOpen ? "block" : "hidden"
+                }`}
+              >
                   <a
                     href="#"
                     className="flex items-center p-3 -mt-2 text-sm transition-colors duration-300 transform  hover:bg-gray-100"
@@ -227,31 +257,37 @@ export default function Navbar() {
 
                   <Link
                     href={`/user/${token}/my-courses`}
-                    className="block px-4 py-3 text-sm capitalize transition-colors duration-300 transform  hover:bg-gray-100  "
+                    className="block px-4 py-3 text-sm capitalize transition-colors duration-300 transform  hover:bg-gray-100"
+                    onClick={handleMenuItemClick}
                   >
                     My Course
                   </Link>
                   <a
                     href="#"
-                    className="block px-4 py-3 text-sm capitalize transition-colors duration-300 transform  hover:bg-gray-100  "
+                    className="block px-4 py-3 text-sm capitalize transition-colors duration-300 transform  hover:bg-gray-100"
+                    onClick={handleMenuItemClick}
                   >
                     View profile
                   </a>
                   <hr className="border-gray-200 " />
                   <a
                     href="#"
-                    className="block px-4 py-3 text-sm capitalize transition-colors duration-300 transform  hover:bg-gray-100  "
+                    className="block px-4 py-3 text-sm capitalize transition-colors duration-300 transform  hover:bg-gray-100"
+                    onClick={handleMenuItemClick}
                   >
                     Settings
                   </a>
 
                   <button
-                    onClick={logout}
-                    className="block w-full text-start px-4 py-3 text-sm  capitalize transition-colors duration-300 transform  hover:bg-red-100  "
+                    onClick={() => {
+                      logout();
+                      handleMenuItemClick();
+                    }}
+                    className="block w-full text-start px-4 py-3 text-sm  capitalize transition-colors duration-300 transform  hover:bg-red-100"
                   >
                     Sign Out
                   </button>
-                </div>
+                </motion.div>
               )}
             </div>
           ) : (
@@ -293,7 +329,13 @@ export default function Navbar() {
               </svg>
             </button>
             {isMenuOpen && (
-              <div className="absolute top-0 left-0 w-full">
+              <motion.div
+              initial={{ opacity: 0, x: 20, scale: 0.95 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.95 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="absolute top-0 left-0 w-full"
+            >
                 <div className="p-5 bg-white border rounded shadow-sm">
                   <div className="flex items-center justify-between mb-4">
                     <div className="w-full">
@@ -335,7 +377,12 @@ export default function Navbar() {
                                 : ""
                             }`}
                           >
-                            <Link href="/dashboard/admin">Dashboard</Link>
+                            <Link
+                              href="/dashboard/admin"
+                              onClick={handleMenuItemClick}
+                            >
+                              Dashboard
+                            </Link>
                           </span>
                         </li>
                       )}
@@ -347,7 +394,9 @@ export default function Navbar() {
                               : ""
                           }`}
                         >
-                          <Link href="/">Home</Link>
+                          <Link href="/" onClick={handleMenuItemClick}>
+                            Home
+                          </Link>
                         </span>
                       </li>
                       <li>
@@ -358,7 +407,9 @@ export default function Navbar() {
                               : ""
                           }`}
                         >
-                          <Link href="/courses">Courses</Link>
+                          <Link href="/courses" onClick={handleMenuItemClick}>
+                            Courses
+                          </Link>
                         </span>
                       </li>
                       <li>
@@ -369,15 +420,25 @@ export default function Navbar() {
                               : ""
                           }`}
                         >
-                          <Link href="/contact">Contact</Link>
+                          <Link href="/contact" onClick={handleMenuItemClick}>
+                            Contact
+                          </Link>
                         </span>
                       </li>
                       {user ? (
                         <button
-                          onClick={logout}
+                          onClick={() => {
+                            logout();
+                            handleMenuItemClick();
+                          }}
                           className="inline-flex items-center justify-center w-full text-white h-12 px-6 font-medium tracking-wide transition duration-300 rounded shadow-md bg-red-400 hover:bg-red-700 focus:shadow-outline focus:outline-none"
                         >
-                          <Link href="/auth/register">Sign out</Link>
+                          <Link
+                            href="/auth/register"
+                            onClick={handleMenuItemClick}
+                          >
+                            Sign out
+                          </Link>
                         </button>
                       ) : (
                         <>
@@ -385,12 +446,22 @@ export default function Navbar() {
                             <button
                               className={`font-medium tracking-wide transition-transform duration-300  hover:bg-gray-100 px-4 py-2 rounded`}
                             >
-                              <Link href="/auth/login">Sign in</Link>
+                              <Link
+                                href="/auth/login"
+                                onClick={handleMenuItemClick}
+                              >
+                                Sign in
+                              </Link>
                             </button>
                           </li>
                           <li>
                             <button className="inline-flex items-center justify-center w-full text-white h-12 px-6 font-medium tracking-wide transition duration-300 rounded shadow-md bg-blue-400 hover:bg-blue-700 focus:shadow-outline focus:outline-none">
-                              <Link href="/auth/register">Sign up</Link>
+                              <Link
+                                href="/auth/register"
+                                onClick={handleMenuItemClick}
+                              >
+                                Sign up
+                              </Link>
                             </button>
                           </li>
                         </>
@@ -398,7 +469,7 @@ export default function Navbar() {
                     </ul>
                   </nav>
                 </div>
-              </div>
+              </motion.div>
             )}
           </div>
         </div>
